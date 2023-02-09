@@ -1,3 +1,5 @@
+from Array_verify import shapes_groups
+
 def create_abs(new_table,filename, destination_directory):
 
     header = ['Shape', 'Pos', 'Pcs', 'Grade', 'Diam', 'L', 'a', 'b', 'c', 'd', 'e', 'u', 'v', 'D', 'kg/1','kg/all']
@@ -16,19 +18,22 @@ def create_abs(new_table,filename, destination_directory):
         dict_table.append(row_dict)
 
 
-
     abs_table = []
     abs_table.insert(0, header)
 
     # Iterate through all rows in dict_table
     for i in range(len(dict_table)):
         allowed_shape = dict_table[i].get('Shape')
+        print(allowed_shape)
 
 
     #BVBS header block
         group = "BF2D"
         project = "Hj" +"Dz0114"
-        drawing = "r" + filename[:-4]
+        if "Rev" in filename:
+            drawing = "r" + filename[:-10]
+        else:
+            drawing = "r" + filename[:-4]
         index = "i" + dict_table[i]['Shape']
         position = "p" + dict_table[i]['Pos']
         length = "l" + dict_table[i]['L']
@@ -45,120 +50,98 @@ def create_abs(new_table,filename, destination_directory):
         delta = "t0"
 
         #BVBS geometry block
-        if allowed_shape == "A":
+        if allowed_shape in ["A"]:
             geometry_legth_1 = "Gl" + dict_table[i]['a']
+            geometry_angle_1 = "w{}".format(0)
 
-            value_geometry_angle_1 = dict_table[i].get('u')
-            value_geometry_angle_1 = 0 if value_geometry_angle_1 is None or value_geometry_angle_1.strip() == '' else value_geometry_angle_1
-            geometry_angle_1 = "w{}".format(value_geometry_angle_1)
-
-        elif allowed_shape in ["B","C"]:
+        elif allowed_shape in ["B"]:
             geometry_legth_1 = "Gl" + dict_table[i]['a']
-
-            value_geometry_angle_1 = dict_table[i].get('u')
-            value_geometry_angle_1 = 90 if value_geometry_angle_1 is None or value_geometry_angle_1.strip() == '' else value_geometry_angle_1
-            geometry_angle_1 = "w{}".format(value_geometry_angle_1)
+            geometry_angle_1 = "w{}".format(90)
 
             geometry_legth_2 = "l" + dict_table[i]['b']
+            geometry_angle_2 = "w{}".format(0)
 
-            value_geometry_angle_2 = dict_table[i].get('u')
-            value_geometry_angle_2 = 0 if value_geometry_angle_2 is None or value_geometry_angle_2.strip() == '' else value_geometry_angle_2
-            geometry_angle_2 = "w{}".format(value_geometry_angle_2)
+        elif allowed_shape in ["C"]:
+            geometry_legth_1 = "Gl" + dict_table[i]['a']
+            geometry_angle_1 = "w" + dict_table[i]['u']
+
+            geometry_legth_2 = "l" + dict_table[i]['b']
+            geometry_angle_2 = "w{}".format(0)
 
         elif allowed_shape == "D":
             geometry_legth_1 = "Gl" + dict_table[i]['a']
-
-            value_geometry_angle_1 = dict_table[i].get('u')
-            value_geometry_angle_1 = 0 if value_geometry_angle_1 is None or value_geometry_angle_1.strip() == '' else value_geometry_angle_1
-            geometry_angle_1 = "w{}".format(value_geometry_angle_1)
+            geometry_angle_1 = "w{}".format(90)
 
             geometry_legth_2 = "l" + dict_table[i]['b']
-
-            value_geometry_angle_2 = dict_table[i].get('u')
-            value_geometry_angle_2 = 90 if value_geometry_angle_2 is None or value_geometry_angle_2.strip() == '' else value_geometry_angle_2
-            geometry_angle_2 = "w{}".format(value_geometry_angle_2)
-
+            geometry_angle_2 = "w{}".format(90)
 
             geometry_legth_3 = "l" + dict_table[i]['c']
+            geometry_angle_3 = "w{}".format(0)
 
-            value_geometry_angle_3 = dict_table[i].get('u')
-            value_geometry_angle_3 = 90 if value_geometry_angle_3 is None or value_geometry_angle_3.strip() == '' else value_geometry_angle_3
-            geometry_angle_3 = "w{}".format(value_geometry_angle_3)
-
-        elif allowed_shape in ["72", "YM"]:
+        elif allowed_shape in ["J"]:
             geometry_legth_1 = "Gl" + dict_table[i]['a']
-
-            value_geometry_angle_1 = dict_table[i].get('u')
-            value_geometry_angle_1 = 0 if value_geometry_angle_1 is None or value_geometry_angle_1.strip() == '' else value_geometry_angle_1
-            geometry_angle_1 = "w{}".format(value_geometry_angle_1)
+            geometry_angle_1 = "w" + dict_table[i]['u']
 
             geometry_legth_2 = "l" + dict_table[i]['b']
-
-            value_geometry_angle_2 = dict_table[i].get('u')
-            value_geometry_angle_2 = 90 if value_geometry_angle_2 is None or value_geometry_angle_2.strip() == '' else value_geometry_angle_2
-            geometry_angle_2 = "w{}".format(value_geometry_angle_2)
+            geometry_angle_2 = "w" + dict_table[i]['u']
 
             geometry_legth_3 = "l" + dict_table[i]['c']
+            geometry_angle_3 = "w{}".format(0)
 
-            value_geometry_angle_3 = dict_table[i].get('u')
-            value_geometry_angle_3 = 90 if value_geometry_angle_3 is None or value_geometry_angle_3.strip() == '' else value_geometry_angle_3
-            geometry_angle_3 = "w{}".format(value_geometry_angle_3)
+        elif allowed_shape in ["E"]:
+            geometry_legth_1 = "Gl" + dict_table[i]['a']
+            geometry_angle_1 = "w" + dict_table[i]['u']
+
+            geometry_legth_2 = "l" + dict_table[i]['b']
+            geometry_angle_2 = "w" + dict_table[i]['v']
+
+            geometry_legth_3 = "l" + dict_table[i]['c']
+            geometry_angle_3 = "w{}".format(0)
+
+        # elif allowed_shape in ["72"]:
+        #     geometry_legth_1 = "Gl" + dict_table[i]['a']
+        #     geometry_angle_1 = "w{}".format(45)
+        #
+        #     geometry_legth_2 = "l" + dict_table[i]['b']
+        #     geometry_angle_2 = "w{}".format(90)
+        #
+        #     geometry_legth_3 = "l" + dict_table[i]['c']
+        #     geometry_angle_3 = "w{}".format(45)
+        #
+        #     geometry_legth_4 = "l" + dict_table[i]['d']
+        #     geometry_angle_3 = "w{}".format(0)
+
+        elif allowed_shape in ["R"]:
+            geometry_legth_1 = "Gl" + dict_table[i]['a']
+            geometry_angle_1 = "w{}".format(90)
+
+            geometry_legth_2 = "l" + dict_table[i]['b']
+            geometry_angle_2 = "w{}".format(90)
+
+            geometry_legth_3 = "l" + dict_table[i]['c']
+            geometry_angle_3 = "w{}".format(90)
 
             geometry_legth_4 = "l" + dict_table[i]['d']
-
-            value_geometry_angle_4 = dict_table[i].get('u')
-            value_geometry_angle_4 = 90 if value_geometry_angle_4 is None or value_geometry_angle_4.strip() == '' else value_geometry_angle_4
-            geometry_angle_4 = "w{}".format(value_geometry_angle_4)
-
-        elif allowed_shape in ["R","Y"]:
-            geometry_legth_1 = "Gl" + dict_table[i]['a']
-
-            value_geometry_angle_1 = dict_table[i].get('u')
-            value_geometry_angle_1 = 0 if value_geometry_angle_1 is None or value_geometry_angle_1.strip() == '' else value_geometry_angle_1
-            geometry_angle_1 = "w{}".format(value_geometry_angle_1)
-
-            geometry_legth_2 = "l" + dict_table[i]['b']
-
-            value_geometry_angle_2 = dict_table[i].get('u')
-            value_geometry_angle_2 = 90 if value_geometry_angle_2 is None or value_geometry_angle_2.strip() == '' else value_geometry_angle_2
-            geometry_angle_2 = "w{}".format(value_geometry_angle_2)
-
-            geometry_legth_3 = "l" + dict_table[i]['c']
-
-            value_geometry_angle_3 = dict_table[i].get('u')
-            value_geometry_angle_3 = 90 if value_geometry_angle_3 is None or value_geometry_angle_3.strip() == '' else value_geometry_angle_3
-            geometry_angle_3 = "w{}".format(value_geometry_angle_3)
-
-            geometry_legth_4 = "l" + dict_table[i]['d']
-
-            value_geometry_angle_4 = dict_table[i].get('u')
-            value_geometry_angle_4 = 90 if value_geometry_angle_4 is None or value_geometry_angle_4.strip() == '' else value_geometry_angle_4
-            geometry_angle_4 = "w{}".format(value_geometry_angle_4)
+            geometry_angle_4 = "w{}".format(90)
 
             geometry_legth_5 = "l" + dict_table[i]['e']
-
-            value_geometry_angle_5 = dict_table[i].get('u')
-            value_geometry_angle_5 = 90 if value_geometry_angle_5 is None or value_geometry_angle_5.strip() == '' else value_geometry_angle_5
-            geometry_angle_5 = "w{}".format(value_geometry_angle_5)
-
-            # BVBS geometry types
-
-
+            geometry_angle_5 = "w{}".format(0)
 
         #Private block
         rebar_class = "PnREBAR"
         rebar_type = "h" + dict_table[i]['Shape']
 
         #Merging for checksum
-        if allowed_shape == "A":
+
+        if allowed_shape in shapes_groups["straight"]:
             new_row = [group, project, drawing, index, position, length, quantity, weight, diameter, steel_grade, bending_diameter, layer, delta, geometry_legth_1, geometry_angle_1, rebar_class, rebar_type, "C"]
-        elif allowed_shape in ["B","C"]:
+        elif allowed_shape in shapes_groups["bent_1"] + shapes_groups["bent_1_1"]:
             new_row = [group, project, drawing, index, position, length, quantity, weight, diameter, steel_grade, bending_diameter, layer, delta, geometry_legth_1, geometry_angle_1, geometry_legth_2, geometry_angle_2,rebar_class, rebar_type, "C"]
-        elif allowed_shape == "D":
+        elif allowed_shape in shapes_groups["bent_2"] + shapes_groups["bent_2_1"] + shapes_groups["bent_2_2"]:
             new_row = [group, project, drawing, index, position, length, quantity, weight, diameter, steel_grade, bending_diameter, layer, delta, geometry_legth_1, geometry_angle_1, geometry_legth_2, geometry_angle_2,geometry_legth_3, geometry_angle_3, rebar_class, rebar_type, "C"]
-        elif allowed_shape in ["72", "YM"]:
+        elif allowed_shape in shapes_groups["bent_3"] + shapes_groups["bent_3_1"]:
             new_row = [group, project, drawing, index, position, length, quantity, weight, diameter, steel_grade, bending_diameter, layer, delta, geometry_legth_1, geometry_angle_1, geometry_legth_2, geometry_angle_2, geometry_legth_3, geometry_angle_3, geometry_legth_4, geometry_angle_4, rebar_class, rebar_type, "C"]
-        elif allowed_shape == "R":
+        elif allowed_shape in shapes_groups["bent_4"] + shapes_groups["bent_4_2"]:
             new_row = [group, project, drawing, index, position, length, quantity, weight, diameter, steel_grade, bending_diameter, layer, delta, geometry_legth_1, geometry_angle_1, geometry_legth_2, geometry_angle_2, geometry_legth_3, geometry_angle_3, geometry_legth_4, geometry_angle_4, geometry_legth_5, geometry_angle_5, rebar_class, rebar_type, "C"]
         else:
             new_row = []
@@ -197,29 +180,4 @@ def create_abs(new_table,filename, destination_directory):
     with open(f"{folder}/{file_name}", "w") as file:
         for i, row_string in enumerate(result):
             file.write(f"{row_string}{checksum[i]}@\n")
-
-
-
-
-
-
-
-
-
-    # Result array by rows: new_table
-    # Result array by columns: result
-
-
-"""
-Konvertē no saraksta uz jaunu rindu txt failā:
-                new_table.insert(0, header)
-        with open('test.txt', 'w') as file:
-            for row in new_table:
-                row_str = '\t'.join(str(item) for item in row)
-                file.write(row_str + '\n')
-                print(f'{row_str:5}|' + '\n')
-
-
-        for line in new_table:
-            print(line)
-"""
+            print(f"{row_string}{checksum[i]}@\n")
