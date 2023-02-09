@@ -12,10 +12,23 @@ destination_directory = r"C:\Users\janis.goldmanis\Downloads\bvs_Test"
 
 arrays, file_name = PDF_read_files.create_reinforcement_table_array(directory, False)
 
+header = ['Shape', 'Pos', 'Pcs', 'Grade', 'Diam', 'L', 'a', 'b', 'c', 'd', 'e', 'u', 'v', 'D', 'kg/1', 'kg/all']
+column_count = len(header)
+
 cleaned_up_arrays = []
 removed_arrays = []
+
 for array in arrays:
-    cleaned_up_arrays.append(Array_clean_up_shapes.clean_array(array, False))
+
+    new_array = Array_clean_up_shapes.clean_array(array, False)
+    cleaned_up_arrays.append(new_array)
+
+    table_column_count = len(new_array[0])
+    difference = column_count - table_column_count
+
+    for i in range(difference):
+        for row in new_array:
+            row.insert(-3, '')
 
 for index in range(len(arrays)):
     correct, result = Array_verify.verify_table(cleaned_up_arrays[index], False)
@@ -43,15 +56,6 @@ shape_dict = {}
 
 for array in arrays:
     header = ['Shape', 'Pos', 'Pcs', 'Grade', 'Diam', 'L', 'a', 'b', 'c', 'd', 'e', 'u', 'v', 'D', 'kg/1', 'kg/all']
-
-    # Inserting missing columns
-    column_count = len(header)
-    table_column_count = len(array[0])
-    difference = column_count - table_column_count
-
-    for i in range(difference):
-        for row in array:
-            row.insert(-3, '')
 
     array.insert(0, header)
     for row in array:
