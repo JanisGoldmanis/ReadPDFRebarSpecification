@@ -23,10 +23,10 @@ shapes_groups = {
     "bent_2": ["D"],
     "bent_2_1": ["J"],
     "bent_2_2": ["E"],
-    "bent_3": ["72","XB","YM"],
+    "bent_3": [], #YM: jāpaŗbauda, jo ir arī ne tikai 45 un 90 grādi, XB: jāpārbauda,
     "bent_3_1": [],
-    "bent_4": ["R", "U"],
-    "bent_4_2": ["G"]
+    "bent_4": ["R"],
+    "bent_4_2": []
 }
 
 
