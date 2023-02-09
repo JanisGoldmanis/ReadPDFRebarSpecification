@@ -97,6 +97,8 @@ def verify_table(array, debug=False):
             return False, result
     return True, result
 
+# Testing 123
+
 
 
 
