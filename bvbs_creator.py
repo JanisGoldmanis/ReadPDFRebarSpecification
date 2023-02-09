@@ -132,7 +132,6 @@ def create_abs(new_table,filename, destination_directory):
         rebar_type = "h" + dict_table[i]['Shape']
 
         #Merging for checksum
-
         if allowed_shape in shapes_groups["straight"]:
             new_row = [group, project, drawing, index, position, length, quantity, weight, diameter, steel_grade, bending_diameter, layer, delta, geometry_legth_1, geometry_angle_1, rebar_class, rebar_type, "C"]
         elif allowed_shape in shapes_groups["bent_1"] + shapes_groups["bent_1_1"]:
