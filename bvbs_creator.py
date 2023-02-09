@@ -180,4 +180,3 @@ def create_abs(new_table,filename, destination_directory):
         for i, row_string in enumerate(result):
             file.write(f"{row_string}{checksum[i]}@\n")
             print(f"{row_string}{checksum[i]}@\n")
-    #
