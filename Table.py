@@ -57,24 +57,35 @@ def generate_domains(table_objects, direction, page, debug=False):
     while len(objects) > 0:
         # if debug:
         #     print(f'New Cycle, {len(objects)} objects left')
+
         minimum = objects[0][i + 2]
         minimum_object = objects[0]
 
         for object in objects:
             if minimum > object[i]:
-                minimum = object[i]
-                minimum_object = object
+                if object[4] == "kg/one":
+                    minimum = object[i]+5
+                    minimum_object = object
+                else:
+                    minimum = object[i]
+                    minimum_object = object
         # if debug:
-        #     print(f'New cycle min object: {minimum_object[4]}')
-        #     draw_object(page, minimum_object)
+            # print(f'New cycle min object: {minimum_object[4]}')
+            # draw_object(page, minimum_object)
+        if object[4] == "Shape":
+            maximum = minimum_object[i+2]-6
+        else:
+            maximum = minimum_object[i + 2]
 
-        maximum = minimum_object[i+2]
         for object in objects:
-            if object[i + 2]-1 > maximum > object[i]:
-                maximum = object[i + 2]
+            if object[i + 2] > maximum > middle_coordinate(object[i],object[i+2])-2:
+                if object[4] == "Shape":
+                    maximum = object[i + 2] - 6
+                else:
+                    maximum = object[i + 2]
                 # if debug:
-                #     print(f'Max object {object[4]}')
-                #     draw_object(page, object)
+                    # print(f'Max object {object[4]}')
+                    # draw_object(page, object)
         domains.append([int(minimum), int(maximum)])
         # if debug:
         #     print(f'{len(objects)} objects left')
@@ -158,6 +169,8 @@ def create_array_from_word_objects(table_objects, page, debug=False):
                         break
             if not flag:
                 new_line.append('')
+        if new_line[0] == "Shape":
+            continue
         array.append(new_line)
     return array
 

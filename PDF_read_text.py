@@ -219,7 +219,7 @@ def create_array(file_path, debug=False):
 
             min_x = int(shape_word_object[0])
             max_x = int(kg_word_object[2])
-            min_y = int(shape_word_object[3])
+            min_y = int(shape_word_object[1])
             max_y = int(reinforcement_word_object[1])
 
             if debug:
