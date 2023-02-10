@@ -102,8 +102,117 @@ def generate_domains(table_objects, direction, page, debug=False):
                 objects.remove(remove_object)
     if debug:
         print(domains)
+    return domains[1:]
+
+
+def sort_line(line_objects, debug=False):
+    """
+    Function is expected to be used to sort header objects by ascending X coordinate. (Left to Right)
+    :param line_objects: pdf word objects
+    :param debug:
+    :return: sorted list of domains (start, end)
+    """
+    domains = []
+    for line_object in line_objects:
+        start = int(line_object[0])
+        end = int(line_object[2])
+        domains.append([start, end])
+    domains.sort(key=lambda x: x[0])
     return domains
 
+
+def generate_x_domains(table_objects, debug=False):
+    objects = table_objects[:]
+    domains = []
+
+    # Find header
+    shape_object = ''
+    header_obj_list = []
+    for possible_shape_object in objects:
+        if possible_shape_object[4] == "Shape":
+            shape_object = possible_shape_object
+            break
+    min_y = shape_object[1]
+    max_y = shape_object[3]
+
+    for possible_header_object in objects:
+        obj_min_y = possible_header_object[1]
+        obj_max_y = possible_header_object[3]
+        middle = middle_coordinate(obj_min_y, obj_max_y)
+        if min_y < middle < max_y:
+            header_obj_list.append(possible_header_object)
+    header_domains = sort_line(header_obj_list)
+    if debug:
+        print(f'Header List: {header_obj_list}')
+        print(f'Header Domains: {header_domains}')
+
+    for object_to_remove in header_obj_list:
+        objects.remove(object_to_remove)
+
+    # Find left most object
+    while len(objects) > 0:
+        # if debug:
+        #     print(f'New Cycle, {len(objects)} objects left')
+
+        # Setup initial min x size, that will definitely be higher than at least one value looked at inside cycle
+        minimum = objects[0][2]
+        minimum_object = objects[0]
+
+        # Find object most towards left
+        for possible_minimum_object in objects:
+            if minimum > possible_minimum_object[0]:
+                minimum = possible_minimum_object[0]
+                minimum_object = possible_minimum_object
+
+        # if debug:
+            # print(f'New cycle min object: {minimum_object[4]}')
+            # draw_object(page, minimum_object)
+
+        maximum = minimum_object[2]
+
+        # "Rubber-band" the domain with other objects that should be in left-most domain
+        for possible_stretching_object in objects:
+            start = possible_stretching_object[0]
+            end = possible_stretching_object[2]
+
+            if end > maximum > start:
+                maximum = end
+                # if debug:
+                    # print(f'Max object {object[4]}')
+                    # draw_object(page, object)
+
+        # Check if "Empty" domain should be added to domains, before adding new domain.
+
+        while len(header_domains)>0:
+            current_header = header_domains.pop(0)
+            header_start = current_header[0]
+            header_end = current_header[1]
+            if minimum > header_end:
+                domains.append(current_header)
+            else:
+                break
+
+        domains.append([int(minimum), int(maximum)])
+
+        # if debug:
+        #     print(f'{len(objects)} objects left')
+
+        remove_objects = objects[:]
+        for remove_object in remove_objects:
+            start = remove_object[0]
+            end = remove_object[2]
+            middle = middle_coordinate(start, end)
+
+            # if debug:
+                # print(f'{remove_object[4]} middle is {middle}, current domain: {[int(minimum), int(maximum)]}')
+
+            if minimum <= middle <= maximum:
+                # if debug:
+                    # print(f'From {[int(minimum), int(maximum)]} removing {remove_object[4]}')
+                objects.remove(remove_object)
+    if debug:
+        print(domains)
+    return domains
 
 def draw_cv2_page_domains(page, domains, direction):
     pix = page.get_pixmap()
@@ -133,7 +242,7 @@ def draw_cv2_page_domains(page, domains, direction):
 
 
 def create_array_from_word_objects(table_objects, page, debug=False):
-    domains_x = generate_domains(table_objects, 'H', page, debug)
+    domains_x = generate_x_domains(table_objects, debug)
     if debug:
         draw_cv2_page_domains(page, domains_x, 'H')
     domains_y = generate_domains(table_objects, 'V', page, debug)
@@ -170,8 +279,11 @@ def create_array_from_word_objects(table_objects, page, debug=False):
             if not flag:
                 new_line.append('')
         if new_line[0] == "Shape":
+            print(f'Skipping {new_line}')
             continue
         array.append(new_line)
+    # for line in array:
+    #     print(line)
     return array
 
 
