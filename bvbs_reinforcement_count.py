@@ -14,10 +14,10 @@ shapes_groups = {
     "bent_2": ["D"],
     "bent_2_1": ["J"],
     "bent_2_2": ["E"],
-    "bent_3": ["72","XB","YM"],
+    "bent_3": [], #"72","XB","YM"
     "bent_3_1": [],
-    "bent_4": ["R", "Y", "U"],
-    "bent_4_2": ["44","G", "Z"]
+    "bent_4": ["R"], #"Y", "U"
+    "bent_4_2": [] #"44","G", "Z"
 }
 
 total_count = 0

@@ -17,15 +17,12 @@ def create_abs(new_table,filename, destination_directory):
             previous_shape = shape
         dict_table.append(row_dict)
 
-
     abs_table = []
     abs_table.insert(0, header)
 
     # Iterate through all rows in dict_table
     for i in range(len(dict_table)):
         allowed_shape = dict_table[i].get('Shape')
-        print(allowed_shape)
-
 
     #BVBS header block
         group = "BF2D"
@@ -127,6 +124,25 @@ def create_abs(new_table,filename, destination_directory):
             geometry_legth_5 = "l" + dict_table[i]['e']
             geometry_angle_5 = "w{}".format(0)
 
+        elif allowed_shape in ["U"]:
+            geometry_legth_1 = "Gl" + dict_table[i]['a']
+            geometry_angle_1 = "w{}".format(90)
+
+            geometry_legth_2 = "l" + dict_table[i]['b']
+            geometry_angle_2 = "w{}".format(90)
+
+            geometry_legth_3 = "l" + dict_table[i]['c']
+            geometry_angle_3 = "w{}".format(90)
+
+            geometry_legth_4 = "l" + dict_table[i]['d']
+            geometry_angle_4 = "w{}".format(90)
+
+            geometry_legth_5 = "l" + dict_table[i]['e']
+            geometry_angle_5 = "w{}".format(90)
+
+            geometry_legth_6 = "l" + dict_table[i]['a']
+            geometry_angle_6 = "w{}".format(0)
+
         #Private block
         rebar_class = "PnREBAR"
         rebar_type = "h" + dict_table[i]['Shape']
@@ -142,6 +158,8 @@ def create_abs(new_table,filename, destination_directory):
             new_row = [group, project, drawing, index, position, length, quantity, weight, diameter, steel_grade, bending_diameter, layer, delta, geometry_legth_1, geometry_angle_1, geometry_legth_2, geometry_angle_2, geometry_legth_3, geometry_angle_3, geometry_legth_4, geometry_angle_4, rebar_class, rebar_type, "C"]
         elif allowed_shape in shapes_groups["bent_4"] + shapes_groups["bent_4_2"]:
             new_row = [group, project, drawing, index, position, length, quantity, weight, diameter, steel_grade, bending_diameter, layer, delta, geometry_legth_1, geometry_angle_1, geometry_legth_2, geometry_angle_2, geometry_legth_3, geometry_angle_3, geometry_legth_4, geometry_angle_4, geometry_legth_5, geometry_angle_5, rebar_class, rebar_type, "C"]
+        elif allowed_shape in shapes_groups["bent_5"]:
+            new_row = [group, project, drawing, index, position, length, quantity, weight, diameter, steel_grade, bending_diameter, layer, delta, geometry_legth_1, geometry_angle_1, geometry_legth_2, geometry_angle_2, geometry_legth_3, geometry_angle_3, geometry_legth_4, geometry_angle_4, geometry_legth_5, geometry_angle_5, geometry_legth_6, geometry_angle_6, rebar_class, rebar_type, "C"]
         else:
             new_row = []
         abs_table.append(new_row)
@@ -156,7 +174,6 @@ def create_abs(new_table,filename, destination_directory):
     result = []
     for row in abs_table[1:]:
         row_string = "".join(row)
-        # print("row_string:", row_string)
         result.append(row_string)
 
     def calculate_checksum(C):
@@ -179,4 +196,3 @@ def create_abs(new_table,filename, destination_directory):
     with open(f"{folder}/{file_name}", "w") as file:
         for i, row_string in enumerate(result):
             file.write(f"{row_string}{checksum[i]}@\n")
-            print(f"{row_string}{checksum[i]}@\n")
