@@ -31,6 +31,10 @@ shapes_groups = {
 
 
 def generate_label_dict():
+    """
+    USED!
+    :return:
+    """
     label_dict = {}
     for key in shapes_groups.keys():
         for label in shapes_groups[key]:
@@ -39,12 +43,21 @@ def generate_label_dict():
 
 
 def get_labels():
+    """
+    USED!
+    :return:
+    """
     shapes_all = []
     for labels in shapes_groups.values():
         shapes_all.extend(labels)
     return shapes_all
 
 def is_number(string):
+    """
+    USED!
+    :param string:
+    :return:
+    """
     try:
         float(string)
         return True
@@ -54,6 +67,7 @@ def is_number(string):
 
 def verify_line(line : list[str], checking_tuple) -> tuple:
     """
+    USED!
     line - single line from table
     checking tuple - first entry is values that need to contain something
                      second entry is values, that need to contain floats
@@ -81,6 +95,12 @@ def verify_line(line : list[str], checking_tuple) -> tuple:
 
 
 def verify_table(array, debug=False):
+    """
+    USED!
+    :param array:
+    :param debug:
+    :return:
+    """
     label_group_dict = generate_label_dict()
     for line in array:
         if line[0] == '':

@@ -2,49 +2,25 @@ import numpy as np
 import cv2
 
 
-class Table:
-    def __init__(self, min_x, max_x, min_y, max_y, row_height=6, blank_height=3.2):
-        self.min_x = int(round(min_x, 0))
-        self.max_x = int(round(max_x, 0))
-        self.min_y = int(round(min_y, 0))
-        self.max_y = int(round(max_y, 0))
-
-        self.columns = [21, 42, 57, 82, 98, 119, 140, 163, 184, 209, 230, 254, 275, 296, 317]
-
-        self.height = round(max_y - min_y, 1)
-
-        self.row_height = row_height
-        self.blank_height = blank_height
-
-        self.n = int(self.height / (self.row_height + self.blank_height))
-
-        self.x_domains = []
-        self.y_domains = []
-
-    def __str__(self):
-        return f'Bottom Corner {self.min_x},{self.min_y}, Top Corner {self.max_x},{self.max_y}'
-
-
 def middle_coordinate(start, end):
+    """
+    USED!
+    :param start:
+    :param end:
+    :return:
+    """
     return start + (end - start) / 2
 
 
-def draw_object(page, object):
-    pix = page.get_pixmap()
-    min_x = int(object[0])
-    min_y = int(object[1])
-    max_x = int(object[2])
-    max_y = int(object[3])
-    img = np.frombuffer(pix.samples, np.uint8).reshape(pix.h, pix.w, pix.n)
-    bottom_left = (min_x, min_y)
-    top_right = (max_x, max_y)
-    cv2.rectangle(img, bottom_left, top_right, (255, 0, 0), 2)
-    cv2.imshow("Preview", img)
-    cv2.waitKey(0)
-    cv2.destroyAllWindows()
-
-
 def generate_domains(table_objects, direction, page, debug=False):
+    """
+    USED!
+    :param table_objects:
+    :param direction:
+    :param page:
+    :param debug:
+    :return:
+    """
     objects = table_objects[:]
     domains = []
 
@@ -107,6 +83,7 @@ def generate_domains(table_objects, direction, page, debug=False):
 
 def sort_line(line_objects, debug=False):
     """
+    USED!
     Function is expected to be used to sort header objects by ascending X coordinate. (Left to Right)
     :param line_objects: pdf word objects
     :param debug:
@@ -122,6 +99,12 @@ def sort_line(line_objects, debug=False):
 
 
 def generate_x_domains(table_objects, debug=False):
+    """
+    USED!
+    :param table_objects:
+    :param debug:
+    :return:
+    """
     objects = table_objects[:]
     domains = []
 
@@ -215,6 +198,14 @@ def generate_x_domains(table_objects, debug=False):
     return domains
 
 def draw_cv2_page_domains(page, domains, direction):
+    """
+    USED!
+    For debug
+    :param page:
+    :param domains:
+    :param direction:
+    :return:
+    """
     pix = page.get_pixmap()
     if direction == 'H':
         min_y = 0
@@ -242,6 +233,14 @@ def draw_cv2_page_domains(page, domains, direction):
 
 
 def create_array_from_word_objects(table_objects, page, debug=False):
+    """
+    USED!
+    :param table_objects:
+    :param all_words:
+    :param page:
+    :param debug:
+    :return:
+    """
     domains_x = generate_x_domains(table_objects, debug)
     if debug:
         draw_cv2_page_domains(page, domains_x, 'H')

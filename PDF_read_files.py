@@ -1,8 +1,18 @@
 import os
 import PDF_read_text
+import Array_clean_up_shapes
+import Array_verify
+import bvbs_creator
+import time
 
 
 def get_file_names(directory_path):
+    """
+    USED!
+    Gets all files in a directory
+    :param directory_path:
+    :return:
+    """
     filename_list = []
     for filename in os.listdir(directory_path):
         if os.path.isfile(os.path.join(directory_path, filename)):
@@ -10,52 +20,65 @@ def get_file_names(directory_path):
     return filename_list
 
 
-def create_reinforcement_table_array(directory, debug=False):
+def generate_bvbs(source_directory, destination_directory, debug=False):
     """
-    :param directory: Path to folder with ONLY pdf files
-    :param debug: Full console printout with debug steps
-    :return: In console prints out drawings without reinforcement tables
+    USED!
+    Main function that iterates through all files, finds page with information, creates array, generates BVBS
+    :param source_directory:
+    :param destination_directory:
+    :param debug:
+    :return:
     """
-    file_names = get_file_names(directory)
+    file_names = get_file_names(source_directory)
+    bad_files = []
+    shape_set = set()
+    shape_dict = {}
 
-    # Some checks will be done later. If files are OK.
-    good_file_name_list = []
-    bad_file_name_list = []
-    arrays = []
+    total_file_count = len(file_names)
+    print(f'Source directory: {source_directory}')
+    print(f'Total {total_file_count} files in Source Directory')
 
-    if debug:
-        file_names = file_names[:15]
-
-    # Parsing all files
+    number = 0
     for file_name in file_names:
-        file_path = os.path.join(directory, file_name)
+        start_time = time.time()
+        number += 1
+        file_path = os.path.join(source_directory, file_name)
 
-        # Check if reinforcement table exist
-        if debug:
-            print(f'{" "*4}Checking {file_name}')
-        table_exists = PDF_read_text.table_exists(file_path, debug=debug)
+        # Check if table exists in any page of PDF
+        table_exists, page_number, all_words = PDF_read_text.table_exists(file_path, debug=debug)
 
         if not table_exists:
-            bad_file_name_list.append(file_name)
+            bad_files.append(file_name)
+            continue
+        array = PDF_read_text.create_array(file_path, all_words, page_number, debug)
+
+        cleaned_up_array = Array_clean_up_shapes.clean_array(array, debug)
+
+        correct, result = Array_verify.verify_table(cleaned_up_array, debug)
+
+        for row in array:
+            if row[0] not in shape_set:
+                shape_set.add(row[0])
+                shape_dict[row[0]] = 0
+            shape_dict[row[0]] += 1
+
+        if correct:
+            bvbs_creator.create_abs(cleaned_up_array, file_name, destination_directory)
         else:
-            good_file_name_list.append(file_name)
+            bad_files.append(file_name)
+
+        end_time = round(time.time() - start_time, 2)
+        print(f'{number:>4}/{total_file_count} | {file_name} T{end_time}')
+
+    if len(bad_files) > 0:
+        print()
+        print('Bad files:')
+        for name in bad_files:
+            print(name)
+
+    good_shapes = Array_verify.get_labels()
     print()
-    print(f'Bad Files:')
-    for file_name in bad_file_name_list:
-        print(f'{" " * 4}{file_name}')
-
-    if debug:
-        print(f'Good Files:')
-        for file_name in good_file_name_list:
-            print(f'{" " * 4}{file_name}')
-
-    print(f'Finished checking {len(file_names)} drawings if specification exists')
-    print()
-    print(f'Starting creating arrays')
-
-    for file_name in good_file_name_list:
-        print(f'{" "*4}{file_name}')
-        file_path = os.path.join(directory, file_name)
-        arrays.append(PDF_read_text.create_array(file_path, debug))
-
-    return arrays, good_file_name_list
+    print(f'Allowed shapes: {good_shapes}')
+    for shape in shape_dict.keys():
+        if shape not in good_shapes:
+            print(f'Shape: {shape}, Count: {shape_dict[shape]}')
