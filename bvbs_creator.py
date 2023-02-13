@@ -6,16 +6,12 @@ def create_abs(new_table,filename, destination_directory):
 
     # Creates a list of dictionaries, where each dictionary represents a row in the table
     dict_table = []
-    previous_shape = None
     for row in new_table[1:]:
         row_dict = {}
-        shape = row[1]
         for i, column in enumerate(header):
-            if not shape:
-                shape = previous_shape
             row_dict[column] = row[i]
-            previous_shape = shape
         dict_table.append(row_dict)
+    print (dict_table)
 
     abs_table = []
     abs_table.insert(0, header)
