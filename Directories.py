@@ -1,2 +1,2 @@
-directory = r"C:\Users\janis.goldmanis\Downloads\OneDrive_1_03-02-2023\Test"
+directory = r"C:\Users\janis.goldmanis\Downloads\Full"
 destination_directory = r"C:\Users\janis.goldmanis\Downloads\bvs_Test"
