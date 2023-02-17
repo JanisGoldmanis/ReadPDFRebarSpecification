@@ -3,6 +3,9 @@ def calculate_insulation(array, debug=False):
     used_volume_by_thickness_dict = {}
     used_area_by_thickness_dict = {}
     for line in array:
+        if "INS." not in line[0]:
+            continue
+        print(line)
         if line[0]=='':
             continue
         dimensions = []

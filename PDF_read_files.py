@@ -113,7 +113,7 @@ def generate_total_insulation_report(source_directory, destination_directory, de
     number = 0
     for file_name in file_names:
 
-        # print(file_name)
+        print(file_name)
 
 
         start_time = time.time()
@@ -125,53 +125,63 @@ def generate_total_insulation_report(source_directory, destination_directory, de
             bad_files.append(file_name)
             continue
 
-        array = PDF_read_text.create_insulation_table_array(file_path, all_words, page_number, debug)
+        try:
 
-        if len(array[0]) == 6:
-            temp_array = []
+            array = PDF_read_text.create_insulation_table_array(file_path, all_words, page_number, debug)
+
+            # print(array)
+
+            if len(array[0]) == 6:
+                temp_array = []
+                for line in array:
+                    if len(line) == 6:
+                        temp_array.append(line[:3])
+                        temp_array.append(line[3:])
+                    else:
+                        temp_array.append(line)
+            else:
+                temp_array = array
+
+            array = temp_array
+
+            # for line in array:
+            #     print(line)
+
+            area_dict, volume_dict = Calculate_insulation.calculate_insulation(array)
+
+            good_files.append(file_name)
+
+
+            if "Rev" in file_name:
+                name = file_name[:-10]
+            else:
+                name = file_name[:-4]
+
+
             for line in array:
-                if len(line)== 6:
-                    temp_array.append(line[:3])
-                    temp_array.append(line[3:])
-                else:
-                    temp_array.append(line)
-
-        array = temp_array
-
-        # for line in array:
-        #     print(line)
-
-        area_dict, volume_dict = Calculate_insulation.calculate_insulation(array)
-
-        good_files.append(file_name)
-
-        if "Rev" in file_name:
-            name = file_name[:-10]
-        else:
-            name = file_name[:-4]
-
-
-        for line in array:
-            if line[0] == '':
-                continue
-            line[2] = int(line[2])
-            dimensions = line[1].split('*')
-            dimensions = sorted([int(x) for x in dimensions])
-            new_line = [name]+line+dimensions
-            full_specification.append(new_line)
+                if line[0] == '':
+                    continue
+                line[2] = int(line[2])
+                dimensions = line[1].split('*')
+                dimensions = sorted([int(x) for x in dimensions])
+                new_line = [name]+line+dimensions
+                full_specification.append(new_line)
 
 
 
-        for key in area_dict.keys():
-            if key not in thickness_set:
-                thickness_set.add(key)
-                total_area_dict[key] = 0
-                total_volume_dict[key] = 0
-            total_area_dict[key] += area_dict[key]
-            total_volume_dict[key] += volume_dict[key]
+            for key in area_dict.keys():
+                if key not in thickness_set:
+                    thickness_set.add(key)
+                    total_area_dict[key] = 0
+                    total_volume_dict[key] = 0
+                total_area_dict[key] += area_dict[key]
+                total_volume_dict[key] += volume_dict[key]
 
-        end_time = round(time.time() - start_time, 2)
-        print(f'{number:>4}/{total_file_count} | {file_name} T{end_time}')
+            end_time = round(time.time() - start_time, 2)
+            print(f'{number:>4}/{total_file_count} | {file_name} T{end_time}')
+
+        except:
+            bad_files.append(file_name+"!!!!!")
 
 
 

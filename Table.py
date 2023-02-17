@@ -126,11 +126,19 @@ def generate_insulation_domains_y(table_objects, direction, page, debug=False):
                 # print(f'Max object {object[4]}')
                 # draw_object(page, object)
         if len(domains) > 2:
-            last = domains[-1]
-            second_last = domains[-2]
-            interval = last[1] - second_last[1]
-            next_interval = maximum - last[1]
-            if interval*1.5 < next_interval:
+            first = domains[0]
+            second = domains[1]
+            interval = second[1] - first[1]
+
+
+
+            last = domains[-1][1]
+
+
+
+            next_interval = maximum - last
+
+            if interval*2.5 < next_interval:
                 break
         domains.append([int(minimum), int(maximum)])
         # if debug:
@@ -541,11 +549,13 @@ def create_insulation_array_from_word_objects(table_objects, page, debug=False):
                         new_line.append(word[4])
                         flag = True
                         break
-            if not flag:
-                new_line.append('')
-        if new_line[0] == "Shape":
-            print(f'Skipping {new_line}')
+            # if not flag:
+            #     new_line.append('')
+        if "INS." not in new_line[0]:
+            print('Skipping new line')
+            print(new_line)
             continue
+
         array.append(new_line)
     # for line in array:
     #     print(line)
