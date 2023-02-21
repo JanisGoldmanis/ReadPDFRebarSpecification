@@ -19,7 +19,9 @@ def get_file_names(directory_path):
     filename_list = []
     for filename in os.listdir(directory_path):
         if os.path.isfile(os.path.join(directory_path, filename)):
-            filename_list.append(filename)
+            if filename[-3:] == "pdf":
+                filename_list.append(filename)
+
     return filename_list
 
 
