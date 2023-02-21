@@ -24,7 +24,7 @@ def create_abs(new_table,filename, destination_directory):
     # Iterate through all rows in dict_table
     for i in range(len(dict_table)):
         allowed_shape = dict_table[i].get('Shape')
-        print(allowed_shape)
+        # print(allowed_shape)
 
 
     #BVBS header block
@@ -179,4 +179,4 @@ def create_abs(new_table,filename, destination_directory):
     with open(f"{folder}/{file_name}", "w") as file:
         for i, row_string in enumerate(result):
             file.write(f"{row_string}{checksum[i]}@\n")
-            print(f"{row_string}{checksum[i]}@\n")
+            # print(f"{row_string}{checksum[i]}@\n")

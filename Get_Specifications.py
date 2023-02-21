@@ -124,7 +124,7 @@ def generate_specifications(source_directory, destination_directory, debug=False
                                 file_status["insulation"] = "OK"
                                 embed[2] = int(embed[2])
                                 dimensions = embed[1].split('*')
-                                dimensions = sorted([round(float(x),0) for x in dimensions])
+                                dimensions = sorted([round(float(x), 0) for x in dimensions])
                                 volume = dimensions[0] * dimensions[1] * dimensions[2] / 10 ** 9
                                 total_volume = volume * embed[2]
                                 wall_insulation_volume += total_volume
@@ -149,15 +149,15 @@ def generate_specifications(source_directory, destination_directory, debug=False
         except:
             insulation = "NO"
         try:
-            neto = round(float(file_status["insulation_neto"]),2)
+            neto = round(float(file_status["insulation_neto"]), 2)
         except:
             neto = "NO"
         try:
-            bruto = round(file_status["insulation_bruto"],2)
+            bruto = round(file_status["insulation_bruto"], 2)
         except:
             bruto = "NO"
         try:
-            percentage = round(100*(1-neto/bruto),1)
+            percentage = round(100 * (1 - neto / bruto), 1)
         except:
             percentage = '-'
 
@@ -165,8 +165,8 @@ def generate_specifications(source_directory, destination_directory, debug=False
             neto_bruto_line = [file_name, bruto, neto, percentage]
             full_bruto_neto_specification.append(neto_bruto_line)
 
-
-        print(f'{number:>4}/{total_file_count:<4} | {file_name:<20}| T{end_time:<6}| R-{reinf} | B-{bvbs} | I-{insulation} | Br {bruto:>5} | Ne {neto:>5} | {percentage:>4} |')
+        print(
+            f'{number:>4}/{total_file_count:<4} | {file_name:<20}| T{end_time:<6}| R-{reinf} | B-{bvbs} | I-{insulation} | Br {bruto:>5} | Ne {neto:>5} | {percentage:>4} |')
 
     with open('InsulationData.csv', 'w', newline='') as csvfile:
         # Create a CSV writer

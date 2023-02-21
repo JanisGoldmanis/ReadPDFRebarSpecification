@@ -5,7 +5,7 @@ import Get_Specifications
 
 start_time = time.time()
 
-mode = "specifications"
+mode = "rebar"
 
 # Directories, separate file is used to define folders for different people and not push changes for it to git
 directory = Directories.directory
