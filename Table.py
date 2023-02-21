@@ -436,7 +436,7 @@ def create_array_from_word_objects(table_objects, page, debug=False):
             if not flag:
                 new_line.append('')
         if new_line[0] == "Shape":
-            print(f'Skipping {new_line}')
+            # print(f'Skipping {new_line}')
             continue
         array.append(new_line)
     # for line in array:

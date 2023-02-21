@@ -5,8 +5,8 @@ def calculate_insulation(array, debug=False):
     for line in array:
         if "INS." not in line[0]:
             continue
-        print(line)
-        if line[0]=='':
+        # print(line)
+        if line[0] == '':
             continue
         dimensions = []
         for x in line[1].split('*'):
@@ -21,7 +21,21 @@ def calculate_insulation(array, debug=False):
             thickness_set.add(thickness)
             used_volume_by_thickness_dict[thickness] = 0
             used_area_by_thickness_dict[thickness] = 0
-        used_area_by_thickness_dict[thickness] += width*length
-        used_volume_by_thickness_dict[thickness] += width*length*thickness
+        used_area_by_thickness_dict[thickness] += width * length
+        used_volume_by_thickness_dict[thickness] += width * length * thickness
     return (used_area_by_thickness_dict, used_volume_by_thickness_dict)
 
+
+def split_insulation_table(insulation_array):
+    if len(insulation_array[0]) == 6:
+        temp_array = []
+        for line in insulation_array:
+            if len(line) == 6:
+                temp_array.append(line[:3])
+                temp_array.append(line[3:])
+            else:
+                temp_array.append(line)
+    else:
+        temp_array = insulation_array
+    insulation_array = temp_array
+    return insulation_array
