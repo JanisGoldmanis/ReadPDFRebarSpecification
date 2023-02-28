@@ -4,7 +4,6 @@ import numpy as np
 import Table
 
 
-
 def draw_cv2_page(word_object_list, page):
     """
     USED!
@@ -560,7 +559,18 @@ def create_insulation_table_array(file_path, all_words, page_number, debug=False
 
     array = Table.create_insulation_array_from_word_objects(table_objects, page, debug)
 
-    return array
+    if len(array[0]) == 6:
+        temp_array = []
+        for line in array:
+            if len(line) == 6:
+                temp_array.append(line[:3])
+                temp_array.append(line[3:])
+            else:
+                temp_array.append(line)
+    else:
+        temp_array = array
+
+    return temp_array
 
 
 def create_embed_array(file_path, all_words, page_number, debug=False):

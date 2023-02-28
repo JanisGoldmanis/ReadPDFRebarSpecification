@@ -133,19 +133,6 @@ def generate_total_insulation_report(source_directory, destination_directory, de
 
             # print(array)
 
-            if len(array[0]) == 6:
-                temp_array = []
-                for line in array:
-                    if len(line) == 6:
-                        temp_array.append(line[:3])
-                        temp_array.append(line[3:])
-                    else:
-                        temp_array.append(line)
-            else:
-                temp_array = array
-
-            array = temp_array
-
             # for line in array:
             #     print(line)
 
@@ -229,6 +216,9 @@ def generate_embed_specification(source_directory, destination_directory, debug=
     shape_set = set()
     shape_dict = {}
 
+    embed_types_set = set()
+    unique_embed_list = []
+
     material_set = set()
 
     total_file_count = len(file_names)
@@ -264,6 +254,12 @@ def generate_embed_specification(source_directory, destination_directory, debug=
             if material[0] not in material_set:
                 material_set.add(material[0])
 
+        for embed in embed_array:
+            if embed[0] not in embed_types_set:
+                embed_types_set.add(embed[0])
+                unique_embed_list.append(embed+[file_name])
+
+
 
     if len(bad_files) > 0:
         print()
@@ -285,6 +281,18 @@ def generate_embed_specification(source_directory, destination_directory, debug=
     # Close the file
     file.close()
 
+    # Open a file for writing
+
+
+    with open('EmbedTypes.csv', 'w', newline='') as csvfile:
+        # Create a CSV writer
+        writer = csv.writer(csvfile)
+        # Write the header row
+        # writer.writerow(['Panel', 'Position', 'Dimensions', 'Qty', 'Height', 'Width', 'Length'])
+
+        # Write the data rows
+        for row in unique_embed_list:
+            writer.writerow(row)
 
 
 

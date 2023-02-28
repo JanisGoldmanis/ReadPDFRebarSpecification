@@ -200,3 +200,6 @@ def generate_specifications(source_directory, destination_directory, debug=False
         # Write the data rows
         for row in full_bruto_neto_specification:
             writer.writerow(row)
+
+
+
