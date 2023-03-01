@@ -6,12 +6,17 @@ def create_abs(new_table,filename, destination_directory):
 
     # Creates a list of dictionaries, where each dictionary represents a row in the table
     dict_table = []
+    previous_shape = None
     for row in new_table[1:]:
         row_dict = {}
+        shape = row[1]
         for i, column in enumerate(header):
+            if not shape:
+                shape = previous_shape
             row_dict[column] = row[i]
+            previous_shape = shape
         dict_table.append(row_dict)
-    print (dict_table)
+
 
     abs_table = []
     abs_table.insert(0, header)
@@ -19,6 +24,8 @@ def create_abs(new_table,filename, destination_directory):
     # Iterate through all rows in dict_table
     for i in range(len(dict_table)):
         allowed_shape = dict_table[i].get('Shape')
+        # print(allowed_shape)
+
 
     #BVBS header block
         group = "BF2D"
@@ -170,6 +177,7 @@ def create_abs(new_table,filename, destination_directory):
     result = []
     for row in abs_table[1:]:
         row_string = "".join(row)
+        # print("row_string:", row_string)
         result.append(row_string)
 
     def calculate_checksum(C):
@@ -192,3 +200,4 @@ def create_abs(new_table,filename, destination_directory):
     with open(f"{folder}/{file_name}", "w") as file:
         for i, row_string in enumerate(result):
             file.write(f"{row_string}{checksum[i]}@\n")
+            # print(f"{row_string}{checksum[i]}@\n")

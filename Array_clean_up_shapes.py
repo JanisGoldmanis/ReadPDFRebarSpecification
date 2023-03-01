@@ -4,6 +4,12 @@ allowed_shape = Array_verify.get_labels()
 
 
 def clean_array(array, debug):
+    """
+    USED!
+    :param array:
+    :param debug:
+    :return:
+    """
     temp_array = array[:]
     result = []
 
